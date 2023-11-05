@@ -3,6 +3,7 @@ package com;
 import com.utils.Algorithmactory;
 import com.utils.ComparisonSortPlot;
 import com.utils.TimeTestListener;
+import com.utils.Utils;
 
 import java.nio.charset.Charset;
 import java.util.*;
@@ -32,7 +33,7 @@ public class TestTimeDifference {
         try {
 //            for each array size we will generate an array and test algorithms for @repeatCount
             for (int arraySize : testArraysLength) {
-                System.out.println(SEPARATOR_LINE+"\n"+"New array length: "+arraySize);
+                System.out.println(SEPARATOR_LINE + "\n" + "New array length: " + arraySize);
 //                until array size reaches the value we will use nano-seconds
                 boolean nanoTime = arraySize <= nanoSecUntilArraylength;
                 int turn = 0;
@@ -40,9 +41,9 @@ public class TestTimeDifference {
                 long[] results1stAlg = new long[repeatCount];
                 long[] results2ndAlg = new long[repeatCount];
                 while (repeat-- > 0) {
-                    array1 = generateLargeArray(arraySize);
+                    array1 = Utils.generateLargeArray(arraySize);
                     int[] array2 = Arrays.copyOf(array1, array1.length);
-                    System.out.println(SEPARATOR_LINE+"\nRepeat count: " + repeat + "\nArray size:" + array1.length+"\n"+SEPARATOR_LINE);
+                    System.out.println(SEPARATOR_LINE + "\nRepeat count: " + repeat + "\nArray size:" + array1.length + "\n" + SEPARATOR_LINE);
                     AlgorithmToTest alg1 = Algorithmactory.getAlgorithm(algorithm1, array1);
                     AlgorithmToTest alg2 = Algorithmactory.getAlgorithm(algorithm2, array2);
                     // if array size <6 time will be watched in nano-seconds
@@ -94,14 +95,19 @@ public class TestTimeDifference {
 
     public static long[] compareAlgorithms(AlgorithmToTest a, AlgorithmToTest b, TimeTestListener t) {
         // Test the first method.
-        long time_a =runAlgorithm(a,t);
+        long time_a = runAlgorithm(a, t);
         // Test the second method.
-        long time_b =runAlgorithm(b,t);
+        long time_b = runAlgorithm(b, t);
         return new long[]{time_a, time_b};
     }
 
-   static long runAlgorithm(AlgorithmToTest a, TimeTestListener t){
-        if(a != null) a.run(t);
+    static long runAlgorithm(AlgorithmToTest a, TimeTestListener t) {
+        if (a == null) return -1;
+
+        a.run(t);
+        if(!Utils.isSorted(a.getSortedArray())){
+            throw new AssertionError(a.getClass().getSimpleName()+" is not sorted\n"+ Arrays.toString(a.getSortedArray()));
+        }
         System.out.println(SEPARATOR_LINE);
         return t.getTimeDifference();
     }
@@ -120,29 +126,5 @@ public class TestTimeDifference {
 
         return text.toString();
     }
-
-    public static int[] generateLargeArray(int size) throws InputMismatchException {
-        Random random = new Random();
-        int[] arr = new int[size];
-        Set<Integer> intSet = new HashSet<>();
-        while (intSet.size() < size) {
-            int i = random.nextInt();
-            if (i > 0) {
-                intSet.add(i);
-            }
-        }
-        Integer[] array = intSet.toArray(Integer[]::new);
-        int i = 0;
-        if (arr.length != array.length) {
-            throw new InputMismatchException("array 1 length=" + arr.length + "\n array 2 length=" + array.length);
-        }
-        for (Integer num :
-                array) {
-            arr[i] = array[i++];
-        }
-        return arr;
-
-    }
-
 
 }

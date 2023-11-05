@@ -1,0 +1,5 @@
+.develop
+*develop
+.gradle
+.gitignore
+.idea

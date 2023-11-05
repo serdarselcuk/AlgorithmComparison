@@ -6,6 +6,6 @@ public class Runner {
 
     public static void main(String[] args) {
 
-        TestTimeDifference.start(COMBINED_SORT, MERGE_SORT, new int[]{3,5,7,10,17,25,100,125}, 50, 100001);
+        TestTimeDifference.start(COMBINED_SORT, MERGE_SORT,new int[]{3,5,7,10, 20, 30, 40, 50, 75, 100, 150, 300, 500, 1000}, 15, 100001);
     }
 }

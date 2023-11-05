@@ -1,15 +1,15 @@
 package com.sorting;
 
 import com.AlgorithmToTest;
-import com.TestTimeDifference;
 import com.utils.TimeTestListener;
+import com.utils.Utils;
+
+import java.util.Arrays;
 
 import static com.utils.Constants.BUBBLES_SORT_EFFICENCY_LIMIT;
 
 public class CombinedSort implements AlgorithmToTest {
     private int[] arr;
-    private MergeSort mergeSort;
-    private BubbleSort bubble;
     private boolean done;
 
     public CombinedSort(int[] arr) {
@@ -18,16 +18,17 @@ public class CombinedSort implements AlgorithmToTest {
     }
 
     public static void main(String[] args) {
-        int[] array = TestTimeDifference.generateLargeArray(100);
+        int[] array = {9,8,7,6,5,4,3,2,1,0};
+//                Utils.generateLargeArray(10);
         AlgorithmToTest a = new CombinedSort(array);
         a.run(TimeTestListener.getInstance(true));
-        a.getSortedArray();
+        System.out.println(Arrays.toString(a.getSortedArray()));
     }
 
     @Override
     public void run(TimeTestListener t) {
         t.start(this);
-        merge(arr);
+        arr = combinedSort(arr);
         t.end();
         t.fireEndEvent();
         System.out.println(this);
@@ -40,22 +41,48 @@ public class CombinedSort implements AlgorithmToTest {
     }
 
     //modified merge method will use bubbleSort when array is smaller than 15
-    public int[] merge(int[] array) {
-        mergeSort = new MergeSort(arr);
+    public int[] combinedSort(int[] array) {
         if (array.length < 2) return array;
         int mid = array.length / 2;
         // if provided array is smaller than 16 than we will apply bubble sort
         if (array.length < BUBBLES_SORT_EFFICENCY_LIMIT) {
-            bubble = new BubbleSort(array);
+            BubbleSort bubble = new BubbleSort(array);
             bubble.sort();
             return bubble.setDone(true).getSortedArray();
         }
-        int[][] splitedArrays = mergeSort.splitArrays(array, mid);
-        splitedArrays[0] = merge(splitedArrays[0]);
-        splitedArrays[1] = merge(splitedArrays[1]);
+        int[][] splitedArrays = splitArrays(array, mid);
+        splitedArrays[0] = combinedSort(splitedArrays[0]);
+        splitedArrays[1] = combinedSort(splitedArrays[1]);
 
-        return mergeSort.merge(splitedArrays[0], splitedArrays[1]);
+        return merge(splitedArrays[0], splitedArrays[1]);
     }
+
+    public int[][] splitArrays(int[] array, int from) {
+        int[] l = Arrays.copyOfRange(array, 0, from);
+        int[] r = Arrays.copyOfRange(array, from, array.length);
+        return new int[][]{l, r};
+    }
+
+    public int[] merge(int[] leftArray, int[] rightArray) {
+        int[] array = new int[leftArray.length + rightArray.length];
+        int i = 0, j = 0, k = 0;
+        while (i < leftArray.length && j < rightArray.length) {
+            if (leftArray[i] <= rightArray[j]) {
+                array[k++] = leftArray[i++];
+            } else {
+                array[k++] = rightArray[j++];
+            }
+        }
+        while (i < leftArray.length) {
+            array[k++] = leftArray[i++];
+        }
+        while (j < rightArray.length) {
+            array[k++] = rightArray[j++];
+        }
+        return array;
+    }
+
+
 
     @Override
     public String toString() {

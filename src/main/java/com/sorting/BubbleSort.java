@@ -2,6 +2,7 @@ package com.sorting;
 
 import com.AlgorithmToTest;
 import com.utils.TimeTestListener;
+import com.utils.Utils;
 
 import java.sql.Time;
 import java.util.Arrays;
@@ -37,33 +38,33 @@ private int[] arr;
 
     // An optimized version of Bubble Sort
     void sort() {
+//        if(Utils.isSorted(arr))
+//            return;
         boolean swapped = true;
         int i = 0;
-//        while there are elements needs to be swapped we are keeping to loop array. Since bigger elements are being
-//        move to the end each time we can loop for 1 element less
-        while (swapped && arr.length-i>0) {
+        // while there are elements needs to be swapped we are keeping to loop array. Since bigger elements are being
+        // move to the end each time we can loop for 1 element less
+        while (swapped && arr.length - i > 0) {
+            // if current node is bigger than the next one than switch
             swapped = false;
-            for (int j = 0; j < arr.length-i-1; j++) {
-//          if current node is bigger than the next one than switch
+            for (int j = 0; j < arr.length - i - 1; j++) {
                 if (arr[j] > arr[j + 1]) {
-                    swapped =  swap(j);
+                    swap(j);
+                    swapped = true;
                 }
             }
-//       increasing turn number to understand when to stop
+            // increasing turn number to understand when to stop
             i++;
         }
     }
 
 //    swapping elements in the array for the given order with the next one
-   private boolean swap(int order){
-        if (order <= arr.length-1) {
-            int temp = arr[order];
-            arr[order] = arr[order + 1];
-            arr[order + 1] = temp;
-        }else{
-            return false;
-        }
-        return true;
+   private void swap(int order){
+       if (order <= arr.length - 1) {
+           int temp = arr[order];
+           arr[order] = arr[order + 1];
+           arr[order + 1] = temp;
+       }
     }
 
     @Override

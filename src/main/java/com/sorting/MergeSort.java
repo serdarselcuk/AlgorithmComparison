@@ -3,19 +3,22 @@ package com.sorting;
 import com.AlgorithmToTest;
 import com.TestTimeDifference;
 import com.utils.TimeTestListener;
+import com.utils.Utils;
 
-public class MergeSort implements AlgorithmToTest {
+import java.util.Arrays;
+
+public class MergeSort<T extends Comparable<T>> implements AlgorithmToTest {
     private int[] arr;
     private boolean done;
 
 
-    public MergeSort(Object arr) {
-        this.arr = (int[]) arr;
+    public MergeSort(int[] arr) {
+        this.arr = arr;
         done = false;
     }
 
     public static void main(String[] args) {
-        int[] array = TestTimeDifference.generateLargeArray(100);
+        int[] array = Utils.generateLargeArray(100);
         new MergeSort(array).run(TimeTestListener.getInstance(true));
 
     }
@@ -36,15 +39,8 @@ public class MergeSort implements AlgorithmToTest {
     }
 
     public int[][] splitArrays(int[] array, int from) {
-        int[] l = new int[from];
-        int[] r = new int[array.length - from];
-
-        for (int i = 0; i < from; i++) {
-            l[i] = array[i];
-        }
-        for (int i = from; i < array.length; i++) {
-            r[i - from] = array[i];
-        }
+        int[] l = Arrays.copyOfRange(array, 0, from);
+        int[] r = Arrays.copyOfRange(array, from, array.length);
         return new int[][]{l, r};
     }
 
